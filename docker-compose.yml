@@ -1,0 +1,31 @@
+version: "1"
+
+services:
+  web: &web
+    depends_on:
+      - db
+    build: 
+      context: .
+      dockerfile: ./docker/django/Dockerfile
+    command: /start.sh
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+
+  db:
+    build: 
+      context: .
+      dockerfile: ./docker/postgres/Dockerfile
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+    restart: always
+
+volumes:
+  postgres_data:
+
+
+
+
