@@ -24,9 +24,7 @@ class TestDetails(viewsets.ViewSet):
         if serializer.is_valid():
             defaults = serializer.validated_data.copy()
             code = defaults.pop("code").upper()
-            Test.objects.update_or_create(
-                code=code, defaults=defaults
-            )
+            Test.objects.update_or_create(code=code, defaults=defaults)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         non_field_errors = serializer.errors.get("non_field_errors", [])
