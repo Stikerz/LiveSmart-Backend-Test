@@ -9,13 +9,13 @@ class TestDetails(viewsets.ViewSet):
     def retrieve(self, request, **kwargs):
         code = kwargs.get("code").upper()
 
-        queryset = Test.objects.filter(code=code)
-        if not queryset.exists():
+        try:
+            blood_test = Test.objects.get(code=code)
+        except Test.DoesNotExist:
             return Response(
                 {"error": "Blood test not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
-        blood_test = queryset.first()
         serializer = TestSerializer(blood_test)
         return Response(serializer.data)
 
