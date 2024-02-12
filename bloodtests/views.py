@@ -21,13 +21,8 @@ class TestDetails(viewsets.ViewSet):
 
     def create(self, request, **kwargs):
         serializer = TestSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             defaults = serializer.validated_data.copy()
             code = defaults.pop("code").upper()
             Test.objects.update_or_create(code=code, defaults=defaults)
             return Response(serializer.data, status=status.HTTP_200_OK)
-
-        non_field_errors = serializer.errors.get("non_field_errors", [])
-        if non_field_errors:
-            return Response(non_field_errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
